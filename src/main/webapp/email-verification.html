@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>IdeaFex Email Verification</title>
+    <meta name="viewport" content="width-device-width, initial-scale-1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script language="javascript">
+        $(document).ready(function (){
+            var urlParams = new URLSearchParams(location.search);   
+            if(urlParams.has('token')){
+                verifyToken(urlParams.get('token'));
+            }  
+            /*
+            $.get('http://localhost:8090/app-ws/api/v1/user/email-verify', {token: tokenValue})
+            $.get('http://ec2-100-24-41-115.compute-1.amazonaws.com:8090/app-ws/api/v1/user/email-verify', {token: tokenValue})
+            */
+            function verifyToken(tokenValue){
+                
+                $.get('http://ec2-100-24-41-115.compute-1.amazonaws.com:8090/app-ws/api/v1/user/email-verify', {token: tokenValue})
+                .done(function (response){
+                    if (response["operationResult"] === "SUCCESS")
+            {
+                $("#not-successful-result").attr( "style", "display: none !important;" ); 
+                $("#successful-result").attr( "style", "display: block !important;" ); 
+                
+            } else {
+                $("#successful-result").attr( "style", "display: none !important;" ); 
+                $("#not-successful-result").attr( "style", "display: block !important;" ); 
+            }
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+        <div id="successful-result" style="display:none">Successful verification</div>
+        <div id="not-successful-result" style="display:none">Verification link has expired</div>
+</body>
+</html>
